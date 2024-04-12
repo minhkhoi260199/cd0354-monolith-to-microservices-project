@@ -38,7 +38,7 @@ jobs:
         command: |
           # Login dockerhub
           echo '__Login DockerHub__'
-          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+          docker login -u="minhkhoi260199@gmail.com" -p="passphientoai589"
           # Pushing
           echo '__Pushing images__'
           docker push khoinm260199/udagram-api-feed:v3
