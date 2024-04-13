@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   lint-app:
     docker:
-      - image: circleci/node:16
+      - image: cimg/node:14.15.0
     steps:
       - checkout
   build-docker:
@@ -13,12 +13,6 @@ jobs:
       - run:
           name: building
           command: |
-            curl -fsSl https://deb.nodesource.com/setup_16.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-            node -v
-            npm -v
-            source set_env.sh
-
             # Build
             echo '-----building----- !!'
             docker build -t udagram-api-feed:v1 ./udagram-api-feed
