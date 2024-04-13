@@ -8,6 +8,7 @@ COPY package*.json ./
 RUN npm ci -force
 ## Bundle app source
 COPY . .
+RUN npm cache clean --force
 RUN ionic build
 ### Run 
 FROM nginx:alpine
