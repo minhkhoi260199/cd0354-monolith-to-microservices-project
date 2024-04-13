@@ -9,38 +9,44 @@ jobs:
   build-docker:
     machine: true
     steps:
-     - checkout
-     - run:
-          name: Build docker container for each microservices
+      - checkout
+      - run:
+          name: building
           command: |
             curl -fsSl https://deb.nodesource.com/setup_16.x | sudo -E bash -
             sudo apt-get install -y nodejs
             node -v
             npm -v
-            docker build -t udagram-api-feed ./udagram-api-feed
-            docker tag udagram-api-feed $DOCKER_USERNAME/udagram-api-feed:v1
 
-            docker build -t udagram-api-user ./udagram-api-user
-            docker tag udagram-api-user $DOCKER_USERNAME/udagram-api-user:v1
+            # Build
+            echo '-----building----- !!'
+            docker build -t udagram-api-feed:v1 ./udagram-api-feed
+            docker build -t udagram-api-user:v1 ./udagram-api-user
+            docker build -t udagram-frontend:v1 ./udagram-frontend
+            docker build -t reverseproxy:v1 ./udagram-reverseproxy
 
-            docker build -t udagram-frontend ./udagram-frontend
-            docker tag udagram-frontend $DOCKER_USERNAME/udagram-frontend:v1
+            # Tag
+            echo '-----tagging----- !'
+            docker tag udagram-api-feed:v1 khoinm260199/udagram-api-feed:v3
+            docker tag udagram-api-user:v1 khoinm260199/udagram-api-user:v3
+            docker tag udagram-frontend:v1 khoinm260199/udagram-frontend:v3
+            docker tag reverseproxy:v1 khoinm260199/reverseproxy:v3
 
-            docker build -t udagram-reverseproxy ./udagram-reverseproxy
-            docker tag udagram-reverseproxy $DOCKER_USERNAME/udagram-reverseproxy:v1
+            echo '---List image created---'
+            docker image ls
 
-            echo "-----------All images successfully built-----------"
-
-            echo "-----------login in to hub--------------"
-
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
-            echo "----------Pushing images to dockerhub----------"
-
-            docker push $DOCKER_USERNAME/udagram-api-feed:v1
-            docker push $DOCKER_USERNAME/udagram-api-user:v1
-            docker push $DOCKER_USERNAME/udagram-frontend:v1
-            docker push $DOCKER_USERNAME/udagram-reverseproxy:v1
+      - run:
+          name: push-to-dockerhub
+          command: |
+            # Login dockerhub
+            echo '__Login DockerHub__'
+            docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+            # Pushing
+            echo '__Pushing images__'
+            docker push khoinm260199/udagram-api-feed:v3
+            docker push khoinm260199/udagram-api-user:v3
+            docker push khoinm260199/udagram-frontend:v3
+            docker push khoinm260199/reverseproxy:v3
 
 workflows:
   default:
